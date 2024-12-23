@@ -86,32 +86,10 @@ Before you begin, ensure you have the following installed on your machine:
 - **Build Tool:** Maven
 - **API Documentation:** Swagger
 
-## Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Make your changes and commit them:
-   ```bash
-   git commit -m "Added new feature"
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a Pull Request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
 For any questions or support, feel free to reach out:
 
-- Email: your-email@example.com
-- GitHub: [yourusername](https://github.com/yourusername)
+- Email: prasathhari972@gmail.com
+- GitHub: [hari-vk18](https://github.com/hari-vk18)
