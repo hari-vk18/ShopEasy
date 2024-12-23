@@ -38,7 +38,7 @@ git clone https://github.com/hari-vk18/ShopEasy.git
 cd ShopEasy
 ```
 ## Folder Structure
-## #Backend
+### Backend
 
 - **src/main/java/com/shopeasy:**
   - controller: Contains REST controllers for handling requests.
@@ -49,7 +49,7 @@ cd ShopEasy
   - src/main/resources/application.properties: Configuration for the backend (e.g., database, server, logging).
 
 
-##Acknowledgements
+## Acknowledgements
 
   - Spring Boot Documentation
   - JWT.io
