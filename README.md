@@ -1,7 +1,3 @@
-re's a sample README template you can use for your project ShopEasy. You can customize it based on your project specifics:
-
-markdown
-Copy code
 # ShopEasy
 
 ShopEasy is an e-commerce application that allows users to browse and purchase products online. It provides features such as product catalog, user authentication, shopping cart, and order management.
