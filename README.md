@@ -72,12 +72,12 @@ Before you begin, ensure you have the following installed on your machine:
 - **POST** `/api/users/login` - Login a user
 
 #### Product Management
-- **GET** `/api/products` - Get all products
-- **POST** `/api/products` - Add a new product (Admin only)
+- **GET** `/api/products/all` - Get all products
+- **POST** `/api/products/add` - Add a new product (Admin only)
 
 #### Order Management
-- **POST** `/api/orders` - Place a new order
-- **GET** `/api/orders` - Get user orders
+- **POST** `/api/orders/order` - Place a new order
+- **GET** `/api/orders/orderID/order` - Get user orders
 
 ## Technologies Used
 
