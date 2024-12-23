@@ -51,6 +51,6 @@ cd ShopEasy
 
 ## Acknowledgements
 
-  - Spring Boot Documentation
-  - JWT.io
-  - MySQL Documentation
+  - [Spring Boot Documentation](https://spring.io/projects/spring-boot)
+  - [JWT.io](https://jwt.io/introduction)
+  - [MySQL Documentation](https://dev.mysql.com/doc/)
