@@ -37,8 +37,8 @@ ShopEasy is an e-commerce application that allows users to browse and purchase p
 git clone https://github.com/hari-vk18/ShopEasy.git
 cd ShopEasy
 ```
-##Folder Structure
-###Backend
+## Folder Structure
+## #Backend
 
 - **src/main/java/com/shopeasy:**
   - controller: Contains REST controllers for handling requests.
