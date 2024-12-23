@@ -54,9 +54,8 @@ cd ShopEasy
   - src/main/resources/application.properties: Configuration for the backend (e.g., database, server, logging).
 
 
-###Acknowledgements
+##Acknowledgements
 
   - Spring Boot Documentation
-  - React Documentation
   - JWT.io
   - MySQL Documentation
