@@ -99,7 +99,7 @@
 		</plugins>
 		
 		<finalName>
-			spring-boot-docker
+			shop-easy-application
 		</finalName>
 	</build>
 
