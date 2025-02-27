@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.project.ShopEasy.DTOs.ImageDto;
@@ -104,21 +107,21 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public List<Product> getProductsByCategory(String category) {
+	public Page<Product> getProductsByCategory(String category, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return productRepository.findByCategoryName(category);
+		return productRepository.findByCategoryName(category, pageable);
 	}
 
 	@Override
-	public List<Product> getProductsByBrand(String brand) {
+	public Page<Product> getProductsByBrand(String brand, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return productRepository.findByBrand(brand);
+		return productRepository.findByBrand(brand, pageable);
 	}
 
 	@Override
-	public List<Product> getProductsByCategoryAndBrand(String category, String brand) {
+	public Page<Product> getProductsByCategoryAndBrand(String category, String brand, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return productRepository.findByCategoryNameAndBrand(category, brand);
+		return productRepository.findByCategoryNameAndBrand(category, brand, pageable);
 	}
 
 	@Override
@@ -151,6 +154,25 @@ public class ProductService implements IProductService {
 		List<ImageDto> imageDtos = images.stream().map(image -> mapper.map(image, ImageDto.class)).toList();
 		dto.setImages(imageDtos);
 		return dto;
+	}
+
+	@Override
+	public Page<Product> getProductByCategoryNameAndBrandAndPriceBetween(Optional<String> category,
+			Optional<String> brand, Optional<Double> minPrice, Optional<Double> maxPrice, int page, int size) {
+		// TODO Auto-generated method stub
+
+		Pageable pageable = PageRequest.of(page, size);
+
+		if (category.isPresent() && brand.isPresent() && minPrice.isPresent() && maxPrice.isPresent()) {
+			return productRepository.findByCategoryNameAndBrandAndPriceBetween(category.get(), brand.get(),
+					minPrice.get(), maxPrice.get(), pageable);
+		} else if (category.isPresent()) {
+			return productRepository.findByCategoryName(category.get(), pageable);
+		} else if (brand.isPresent()) {
+			return productRepository.findByBrand(brand.get(), pageable);
+		} else {
+			return productRepository.findAll(pageable);
+		}
 	}
 
 }

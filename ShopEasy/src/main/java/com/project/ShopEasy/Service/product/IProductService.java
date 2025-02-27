@@ -1,6 +1,10 @@
 package com.project.ShopEasy.Service.product;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.project.ShopEasy.DTOs.ProductDto;
 import com.project.ShopEasy.Model.Product;
@@ -19,11 +23,11 @@ public interface IProductService {
 
 	List<Product> getAllProducts();
 
-	List<Product> getProductsByCategory(String category);
+	Page<Product> getProductsByCategory(String category, Pageable pageable);
 
-	List<Product> getProductsByBrand(String brand);
+	Page<Product> getProductsByBrand(String brand, Pageable pageable);
 
-	List<Product> getProductsByCategoryAndBrand(String category, String brand);
+	Page<Product> getProductsByCategoryAndBrand(String category, String brand, Pageable pageable);
 
 	List<Product> getProductsByName(String name);
 
@@ -34,5 +38,8 @@ public interface IProductService {
 	ProductDto convertToDto(Product product);
 
 	List<ProductDto> getConvertedDto(List<Product> products);
+
+	Page<Product> getProductByCategoryNameAndBrandAndPriceBetween(Optional<String> category, Optional<String> brand,
+			Optional<Double> minPrice, Optional<Double> maxPrice, int page, int size);
 
 }

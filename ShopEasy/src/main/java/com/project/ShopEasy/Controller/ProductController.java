@@ -1,8 +1,11 @@
 package com.project.ShopEasy.Controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -105,9 +108,10 @@ public class ProductController {
 	}
 
 	@GetMapping("/product/by-brand")
-	public ResponseEntity<ApiResponse> getProductByBrand(@RequestParam String brand) {
+	public ResponseEntity<ApiResponse> getProductByBrand(@RequestParam String brand, Pageable pageable) {
 		try {
-			List<Product> products = productService.getProductsByBrand(brand);
+			Page<Product> productPage = productService.getProductsByBrand(brand, pageable);
+			List<Product> products = productPage.getContent();
 			if (products.isEmpty()) {
 				return ResponseEntity.ok(new ApiResponse("No product found!", null));
 			}
@@ -119,9 +123,10 @@ public class ProductController {
 	}
 
 	@GetMapping("/product/{category}/all/products")
-	public ResponseEntity<ApiResponse> getProductByCategory(@PathVariable String category) {
+	public ResponseEntity<ApiResponse> getProductByCategory(@PathVariable String category, Pageable pageable) {
 		try {
-			List<Product> products = productService.getProductsByCategory(category);
+			Page<Product> productsPage = productService.getProductsByCategory(category, pageable);
+			List<Product> products = productsPage.getContent();
 			if (products.isEmpty()) {
 				return ResponseEntity.ok(new ApiResponse("No product found!", null));
 			}
@@ -149,9 +154,10 @@ public class ProductController {
 
 	@GetMapping("/by/category-and-brand")
 	public ResponseEntity<ApiResponse> getProductsByCategoryAndBrand(@RequestParam String brand,
-			@RequestParam String category) {
+			@RequestParam String category, Pageable pageable) {
 		try {
-			List<Product> products = productService.getProductsByCategoryAndBrand(category, brand);
+			Page<Product> productsPage = productService.getProductsByCategoryAndBrand(category, brand, pageable);
+			List<Product> products = productsPage.getContent();
 			if (products.isEmpty()) {
 				return ResponseEntity.ok(new ApiResponse("No products found!", null));
 			}
@@ -170,6 +176,26 @@ public class ProductController {
 			var productCount = productService.countProductsByBrandAndName(brand, name);
 			return ResponseEntity.ok(new ApiResponse("Product count!", productCount));
 		} catch (Exception e) {
+			return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
+		}
+	}
+
+	@GetMapping("/allPro")
+	public ResponseEntity<ApiResponse> getProductByCategoryNameAndBrandAndPriceBetween(
+			@RequestParam Optional<String> category, @RequestParam Optional<String> brand,
+			@RequestParam Optional<Double> minPrice, @RequestParam Optional<Double> maxPrice,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+		try {
+			Page<Product> productsPage = productService.getProductByCategoryNameAndBrandAndPriceBetween(category, brand,
+					minPrice, maxPrice, page, size);
+			List<Product> products = productsPage.getContent();
+			if (products.isEmpty()) {
+				return ResponseEntity.ok(new ApiResponse("No products found!", null));
+			}
+			List<ProductDto> dto = productService.getConvertedDto(products);
+			return ResponseEntity.ok(new ApiResponse("Found Success!", dto));
+		} catch (Exception e) {
+			// TODO: handle exception
 			return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
 		}
 	}
