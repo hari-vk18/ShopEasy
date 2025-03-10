@@ -8,6 +8,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.ShopEasy.DTOs.OrderDto;
 import com.project.ShopEasy.Enum.OrderStatus;
@@ -36,16 +37,22 @@ public class OrderService implements IOrderService {
 	private ModelMapper modelMapper;
 
 	@Override
+	@Transactional
 	public OrderDto placeOrder(Long userId) {
 		// TODO Auto-generated method stub
 		Cart cart = cartService.getCartByUserId(userId);
 		Order order = createOrder(cart);
 		List<OrderItem> orderItems = createOrderItems(order, cart);
+
+		if (orderItems.isEmpty()) {
+			throw new IllegalStateException("Cart is empty! Cannot place order.");
+		}
+
 		order.setOrderItems(new HashSet<>(orderItems));
 		order.setTotalAmount(calculateTotalAmount(orderItems));
 
 		Order savedOrder = orderRepo.save(order);
-		cartService.cleatCart(cart.getId());
+		cartService.clearCart(cart.getId());
 
 		return convertToDto(savedOrder);
 	}
@@ -60,7 +67,13 @@ public class OrderService implements IOrderService {
 
 	private List<OrderItem> createOrderItems(Order order, Cart cart) {
 		return cart.getItems().stream().map(cartItems -> {
-			Product product = cartItems.getProduct();
+			Product product = productRepository.findById(cartItems.getProduct().getId())
+					.orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+			if (product.getInventory() < cartItems.getQuantity()) {
+				throw new IllegalStateException("Not enough stock for product: " + product.getName());
+			}
+
 			product.setInventory(product.getInventory() - cartItems.getQuantity());
 			productRepository.save(product);
 			return new OrderItem(order, product, cartItems.getQuantity(), cartItems.getUnitPrice());
@@ -80,7 +93,7 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public List<OrderDto> gerUserOrders(Long userId) {
+	public List<OrderDto> getUserOrders(Long userId) {
 		List<Order> orders = orderRepo.findByUserId(userId);
 		return orders.stream().map(this::convertToDto).toList();
 	}
