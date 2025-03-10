@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ShopEasy.DTOs.UserDto;
 import com.project.ShopEasy.Exception.AlreadyExistException;
 import com.project.ShopEasy.Exception.ResourceNotFoundException;
 import com.project.ShopEasy.Response.ApiResponse;
+import com.project.ShopEasy.Service.user.IOtpService;
 import com.project.ShopEasy.Service.user.IUserService;
 import com.project.ShopEasy.request.CreateUserRequest;
 import com.project.ShopEasy.request.UserUpdateRequest;
@@ -27,6 +29,9 @@ public class UserController {
 
 	@Autowired
 	private IUserService userService;
+
+	@Autowired
+	private IOtpService otpService;
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/{userId}/user")
@@ -41,9 +46,8 @@ public class UserController {
 		}
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@PostMapping("/register")
-	public ResponseEntity<ApiResponse> createUser(@RequestBody CreateUserRequest request) {
+//	@PostMapping("/register")
+	private ResponseEntity<ApiResponse> createUser(@RequestBody CreateUserRequest request) {
 		try {
 			UserDto user = userService.createUser(request);
 			return ResponseEntity.ok(new ApiResponse("Create Success!", user));
@@ -54,6 +58,23 @@ public class UserController {
 
 	}
 
+	@PostMapping("/send-otp")
+	public ResponseEntity<String> sendOtp(@RequestBody CreateUserRequest request) {
+		otpService.generateOtp(request.getEmail());
+		System.out.println("🔍 sendOtp() called for: " + request.getEmail());
+		return ResponseEntity.ok("OTP sent successfully.");
+	}
+
+	@PostMapping("/verify-otp")
+	public ResponseEntity<ApiResponse> verifyOtp(@RequestBody CreateUserRequest request, @RequestParam String otp) {
+		if (otpService.verifyOtp(request.getEmail(), otp)) {
+			return createUser(request);
+		} else {
+			return ResponseEntity.status(400).body(new ApiResponse("Invalid OTP.", null));
+		}
+	}
+
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/{userId}/update")
 	public ResponseEntity<ApiResponse> updateUser(@RequestBody UserUpdateRequest request, @PathVariable Long userId) {
 		try {
