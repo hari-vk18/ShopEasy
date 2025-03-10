@@ -54,10 +54,16 @@ public class JwtUtils {
 		try {
 			Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token);
 			return true;
-		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
-				| IllegalArgumentException e) {
-			throw new JwtException(e.getMessage());
-
-		}
+		}  catch (ExpiredJwtException e) {
+            throw new JwtException("Token expired: " + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            throw new JwtException("Unsupported token: " + e.getMessage());
+        } catch (MalformedJwtException e) {
+            throw new JwtException("Malformed token: " + e.getMessage());
+        } catch (SignatureException e) {
+            throw new JwtException("Invalid signature: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new JwtException("Token is null or empty: " + e.getMessage());
+        }
 	}
 }
