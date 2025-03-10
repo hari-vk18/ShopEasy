@@ -50,7 +50,7 @@ public class OrderController {
 	@GetMapping("/{userId}/orders")
 	public ResponseEntity<ApiResponse> getUserOrder(@PathVariable Long userId) {
 		try {
-			List<OrderDto> orders = orderService.gerUserOrders(userId);
+			List<OrderDto> orders = orderService.getUserOrders(userId);
 			return ResponseEntity.ok(new ApiResponse("Success!", orders));
 		} catch (ResourceNotFoundException e) {
 			// TODO: handle exception

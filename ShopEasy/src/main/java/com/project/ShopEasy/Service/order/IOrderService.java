@@ -10,5 +10,5 @@ public interface IOrderService {
 
 	OrderDto getOrder(Long orderId);
 
-	List<OrderDto> gerUserOrders(Long userId);
+	List<OrderDto> getUserOrders(Long userId);
 }

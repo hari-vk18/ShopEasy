@@ -39,7 +39,7 @@ public class CartService implements ICartService {
 
 	@Transactional
 	@Override
-	public void cleatCart(Long id) {
+	public void clearCart(Long id) {
 		// TODO Auto-generated method stub
 		Cart cart = getCart(id);
 		cartItemRepository.deleteAllByCartId(id);

@@ -9,7 +9,7 @@ public interface ICartService {
 
 	Cart getCart(Long id);
 
-	void cleatCart(Long id);
+	void clearCart(Long id);
 
 	BigDecimal getTotalPrice(Long id);
 
