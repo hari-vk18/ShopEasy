@@ -1,3 +1,14 @@
+src/main/resources/application.properties
+src/main/resources/application.yml
+
+# Ignore logs, database files, and temp files
+logs/
+*.log
+*.db
+*.sqlite
+.DS_Store
+.env
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
