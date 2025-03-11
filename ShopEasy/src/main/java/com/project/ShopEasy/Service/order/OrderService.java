@@ -17,9 +17,12 @@ import com.project.ShopEasy.Model.Cart;
 import com.project.ShopEasy.Model.Order;
 import com.project.ShopEasy.Model.OrderItem;
 import com.project.ShopEasy.Model.Product;
+import com.project.ShopEasy.Model.User;
 import com.project.ShopEasy.Repository.OrderRepository;
 import com.project.ShopEasy.Repository.ProductRepository;
 import com.project.ShopEasy.Service.cart.ICartService;
+import com.project.ShopEasy.Service.user.IOtpService;
+import com.project.ShopEasy.Service.user.IUserService;
 
 @Service
 public class OrderService implements IOrderService {
@@ -35,6 +38,12 @@ public class OrderService implements IOrderService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	@Autowired
+	private IOtpService otpService;
+
+	@Autowired
+	private IUserService userService;
 
 	@Override
 	@Transactional
@@ -53,6 +62,10 @@ public class OrderService implements IOrderService {
 
 		Order savedOrder = orderRepo.save(order);
 		cartService.clearCart(cart.getId());
+
+		User user = userService.getUserById(userId);
+
+		otpService.sendOrderConformation(user.getEmail(), savedOrder.getId());
 
 		return convertToDto(savedOrder);
 	}

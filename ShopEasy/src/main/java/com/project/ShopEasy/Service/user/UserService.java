@@ -1,6 +1,7 @@
 package com.project.ShopEasy.Service.user;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 import com.project.ShopEasy.DTOs.UserDto;
 import com.project.ShopEasy.Exception.AlreadyExistException;
 import com.project.ShopEasy.Exception.ResourceNotFoundException;
+import com.project.ShopEasy.Model.Role;
 import com.project.ShopEasy.Model.User;
+import com.project.ShopEasy.Repository.RoleRepository;
 import com.project.ShopEasy.Repository.UserRepository;
 import com.project.ShopEasy.request.CreateUserRequest;
 import com.project.ShopEasy.request.UserUpdateRequest;
@@ -25,6 +28,9 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -50,6 +56,8 @@ public class UserService implements IUserService {
 			user.setLastName(req.getLastName());
 			user.setEmail(req.getEmail());
 			user.setPassword(passwordEncoder.encode(req.getPassword()));
+			Role userRole = roleRepository.findByName("ROLE_USER").get();
+			user.setRoles(Set.of(userRole));
 			userRepository.save(user);
 			return convertUserToDto(user);
 		}).orElseThrow(() -> new AlreadyExistException(request.getEmail() + "already exist!"));

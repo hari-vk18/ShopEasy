@@ -8,4 +8,6 @@ public interface IOtpService {
 
 	void sendOtptoEmail(String email, String otp);
 
+	void sendOrderConformation(String email, Long orderId);
+
 }
