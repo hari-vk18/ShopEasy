@@ -21,6 +21,7 @@ import com.project.ShopEasy.Model.User;
 import com.project.ShopEasy.Repository.OrderRepository;
 import com.project.ShopEasy.Repository.ProductRepository;
 import com.project.ShopEasy.Service.cart.ICartService;
+import com.project.ShopEasy.Service.invoice.InvoiceGenerator;
 import com.project.ShopEasy.Service.user.IOtpService;
 import com.project.ShopEasy.Service.user.IUserService;
 
@@ -45,6 +46,9 @@ public class OrderService implements IOrderService {
 	@Autowired
 	private IUserService userService;
 
+	@Autowired
+	private InvoiceGenerator generator;
+
 	@Override
 	@Transactional
 	public OrderDto placeOrder(Long userId) {
@@ -66,6 +70,7 @@ public class OrderService implements IOrderService {
 		User user = userService.getUserById(userId);
 
 		otpService.sendOrderConformation(user.getEmail(), savedOrder.getId());
+		generator.processOrder(user.getFirstName(), user.getEmail(), orderItems);
 
 		return convertToDto(savedOrder);
 	}
