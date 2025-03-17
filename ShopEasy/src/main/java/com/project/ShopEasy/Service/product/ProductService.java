@@ -39,7 +39,7 @@ public class ProductService implements IProductService {
 	private ModelMapper mapper;
 
 	@Override
-	public Product addProduct(AddProductRequest request) {
+	public ProductDto addProduct(AddProductRequest request) {
 		// TODO Auto-generated method stub
 
 		if (productExists(request.getName(), request.getBrand())) {
@@ -51,7 +51,8 @@ public class ProductService implements IProductService {
 					return categoryRepository.save(newCategory);
 				});
 		request.setCategory(category);
-		return productRepository.save(createProduct(request, category));
+		Product product = createProduct(request, category);
+		return convertToDto(productRepository.save(product));
 	}
 
 	private boolean productExists(String name, String brand) {
@@ -80,11 +81,11 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public Product updateProductById(UpdateProductRequest product, Long productId) {
+	public ProductDto updateProductById(UpdateProductRequest product, Long productId) {
 		// TODO Auto-generated method stub
-
-		return productRepository.findById(productId).map(existingProd -> updateExistingProduct(existingProd, product))
-				.map(productRepository::save).orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
+		Product existingProd = productRepository.findById(productId)
+				.orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
+		return convertToDto(productRepository.save(updateExistingProduct(existingProd, product)));
 	}
 
 	private Product updateExistingProduct(Product existingProd, UpdateProductRequest Request) {
@@ -101,9 +102,9 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public List<Product> getAllProducts() {
+	public List<ProductDto> getAllProducts() {
 		// TODO Auto-generated method stub
-		return productRepository.findAll();
+		return getConvertedDto(productRepository.findAll());
 	}
 
 	@Override
@@ -125,9 +126,10 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public List<Product> getProductsByName(String name) {
+	public List<ProductDto> getProductsByName(String name) {
 		// TODO Auto-generated method stub
-		return productRepository.findByName(name);
+		List<Product> products = productRepository.findByName(name);
+		return getConvertedDto(products);
 	}
 
 	@Override

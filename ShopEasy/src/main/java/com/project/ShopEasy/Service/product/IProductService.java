@@ -13,15 +13,15 @@ import com.project.ShopEasy.request.UpdateProductRequest;
 
 public interface IProductService {
 
-	Product addProduct(AddProductRequest product);
+	ProductDto addProduct(AddProductRequest product);
 
 	Product getProductById(Long id);
 
 	void deleteProductById(Long id);
 
-	Product updateProductById(UpdateProductRequest product, Long productId);
+	ProductDto updateProductById(UpdateProductRequest product, Long productId);
 
-	List<Product> getAllProducts();
+	List<ProductDto> getAllProducts();
 
 	Page<Product> getProductsByCategory(String category, Pageable pageable);
 
@@ -29,7 +29,7 @@ public interface IProductService {
 
 	Page<Product> getProductsByCategoryAndBrand(String category, String brand, Pageable pageable);
 
-	List<Product> getProductsByName(String name);
+	List<ProductDto> getProductsByName(String name);
 
 	List<Product> getProductsByNameAndBrand(String name, String brand);
 

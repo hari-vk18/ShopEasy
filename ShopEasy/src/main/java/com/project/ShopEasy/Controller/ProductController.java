@@ -37,17 +37,16 @@ public class ProductController {
 
 	@GetMapping("/all")
 	public ResponseEntity<ApiResponse> getAllProduct() {
-		List<Product> products = productService.getAllProducts();
-		List<ProductDto> productDtos = productService.getConvertedDto(products);
-		return ResponseEntity.ok(new ApiResponse("Found!", productDtos));
+		List<ProductDto> products = productService.getAllProducts();
+		return ResponseEntity.ok(new ApiResponse("Found!", products));
 	}
 
 	@GetMapping("/product/{id}/product")
 	public ResponseEntity<ApiResponse> getProductById(@PathVariable Long id) {
 		try {
 			Product product = productService.getProductById(id);
-			ProductDto dto = productService.convertToDto(product);
-			return ResponseEntity.ok(new ApiResponse("Found!", dto));
+			ProductDto productDto = productService.convertToDto(product);
+			return ResponseEntity.ok(new ApiResponse("Found!", productDto));
 		} catch (ResourceNotFoundException e) {
 			// TODO Auto-generated catch block
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
@@ -58,9 +57,8 @@ public class ProductController {
 	@PostMapping("/add")
 	public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
 		try {
-			Product theProduct = productService.addProduct(product);
-			ProductDto dto = productService.convertToDto(theProduct);
-			return ResponseEntity.ok(new ApiResponse("Add Product Succes!", dto));
+			ProductDto theProduct = productService.addProduct(product);
+			return ResponseEntity.ok(new ApiResponse("Add Product Succes!", theProduct));
 		} catch (AlreadyExistException e) {
 			// TODO Auto-generated catch block
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
@@ -71,9 +69,8 @@ public class ProductController {
 	@PutMapping("/product/{id}/update")
 	public ResponseEntity<ApiResponse> updateProduct(@RequestBody UpdateProductRequest request, @PathVariable Long id) {
 		try {
-			Product product = productService.updateProductById(request, id);
-			ProductDto dto = productService.convertToDto(product);
-			return ResponseEntity.ok(new ApiResponse("Update Success!", dto));
+			ProductDto product = productService.updateProductById(request, id);
+			return ResponseEntity.ok(new ApiResponse("Update Success!", product));
 		} catch (ResourceNotFoundException e) {
 			// TODO: handle exception
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
@@ -95,12 +92,11 @@ public class ProductController {
 	@GetMapping("/{name}/products")
 	public ResponseEntity<ApiResponse> getProductByName(@PathVariable String name) {
 		try {
-			List<Product> products = productService.getProductsByName(name);
+			List<ProductDto> products = productService.getProductsByName(name);
 			if (products.isEmpty()) {
 				return ResponseEntity.ok(new ApiResponse("No product found!", null));
 			}
-			List<ProductDto> dto = productService.getConvertedDto(products);
-			return ResponseEntity.ok(new ApiResponse("Found Success!", dto));
+			return ResponseEntity.ok(new ApiResponse("Found Success!", products));
 		} catch (Exception e) {
 			// TODO: handle exception
 			return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
