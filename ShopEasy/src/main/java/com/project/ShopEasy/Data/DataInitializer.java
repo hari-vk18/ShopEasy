@@ -30,13 +30,14 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		Set<String> defaultRoles = Set.of("ROLE_ADMIN", "ROLE_USER");
-		createDefaultUserIfNotExits();
 		createDefaultRoleIfNotExits(defaultRoles);
+		createDefaultUserIfNotExits();
 		createDefaultAdminIfNotExits();
 	}
 
 	private void createDefaultUserIfNotExits() {
-		Role userRole = roleRepository.findByName("ROLE_USER").get();
+		Role userRole = roleRepository.findByName("ROLE_USER")
+				.orElseThrow(() -> new RuntimeException("User role not found"));
 		for (int i = 1; i <= 5; i++) {
 			String defaultEmail = "user" + i + "@email.com";
 			if (userRepository.existsByEmail(defaultEmail)) {
@@ -72,8 +73,8 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
 	}
 
 	private void createDefaultRoleIfNotExits(Set<String> roles) {
-		roles.stream().filter(role -> roleRepository.findByName(role).isEmpty()).map(Role::new)
-				.forEach(roleRepository::save);
+		roles.stream().filter(role -> roleRepository.findByName(role).isEmpty())
+				.forEach(role -> roleRepository.save(new Role(role)));
 
 	}
 }
