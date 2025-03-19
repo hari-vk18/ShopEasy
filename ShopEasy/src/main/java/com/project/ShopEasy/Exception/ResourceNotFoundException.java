@@ -1,5 +1,6 @@
 package com.project.ShopEasy.Exception;
 
+@SuppressWarnings("serial")
 public class ResourceNotFoundException extends RuntimeException {
 
 	public ResourceNotFoundException(String message) {
