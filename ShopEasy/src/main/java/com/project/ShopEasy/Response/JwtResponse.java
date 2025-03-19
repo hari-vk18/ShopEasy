@@ -7,7 +7,6 @@ public class JwtResponse {
 
 	public JwtResponse() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public JwtResponse(Long id, String token) {
